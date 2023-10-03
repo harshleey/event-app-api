@@ -18,7 +18,7 @@ model User {
   passwordHash    String
   createAt        DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  events          Events[]
+  
 }
 
 model Events {
@@ -32,6 +32,5 @@ model Events {
   end_time       DateTime
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
-  userId         String  @db.ObjectId
-  user           User    @relation(fields: [userId], references: [id])
+  
 }
