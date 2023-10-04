@@ -1,8 +1,7 @@
-// import { PrismaClient } from '@prisma/client';
+
 import bcrypt from 'bcryptjs';
 import { database } from '../libs/prisma.js';
 import { Strategy as LocalStrategy } from 'passport-local';
-// const Prisma = new PrismaClient();
 
 async function initialize (passport) {
   passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
