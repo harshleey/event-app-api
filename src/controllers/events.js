@@ -13,6 +13,8 @@ const createEvent = asyncWrapper(async (req, res) => {
     end_date,
     end_time,
   } = req.body;
+  const { id: userId } = req.user;
+  console.log(userId);
 
   const event = await database.events.create({
     data: {
@@ -23,6 +25,7 @@ const createEvent = asyncWrapper(async (req, res) => {
       start_time,
       end_date,
       end_time,
+      userId,
     },
   });
   console.log(event);
@@ -53,6 +56,7 @@ const updateEvent = asyncWrapper(async (req, res) => {
     end_date,
     end_time,
   } = req.body;
+  const { id: userId } = req.user;
 
   const event = await database.events.update({
     data: {
@@ -64,13 +68,13 @@ const updateEvent = asyncWrapper(async (req, res) => {
       end_date,
       end_time,
     },
-    where: { id },
+    where: { id, userId },
   });
   res.status(StatusCodes.OK).json({ event, errors: null });
 });
 
 const deleteEvent = asyncWrapper(async (req, res) => {
-  // const { id: userId } = req.user;
+  const { id: userId } = req.user;
   const { id } = req.params;
 
   // const event = await database.events.findUnique({
@@ -79,7 +83,7 @@ const deleteEvent = asyncWrapper(async (req, res) => {
 
   // Delete from database
   const delEvent = await database.events
-    .delete({ where: { id } })
+    .delete({ where: { id, userId } })
     .catch((error) => error.meta);
   res.status(StatusCodes.OK).json({
     event: delEvent ? delEvent : null,

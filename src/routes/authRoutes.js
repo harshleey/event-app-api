@@ -1,17 +1,13 @@
-import express from 'express';
-import { homePage, regNewUser } from '../controllers/authController.js';
-import passport from 'passport';
+import express from "express";
+import {
+  // homePage,
+  postLogin,
+  regNewUser,
+} from "../controllers/authController.js";
 const router = express.Router();
 
-router.post('/api/auth/register', regNewUser);
-router.get('/', homePage);
-router.post('/api/auth/login', passport.authenticate('local',
-  {
-    successMessage: 'successfull',
-    successRedirect: '/',
-    failureRedirect: '',
-    successFlash: true,
-    failureFlash: true
-  }));
+router.post("/register", regNewUser);
+// router.get("/", homePage);
+router.post("/login", postLogin);
 
 export default router;

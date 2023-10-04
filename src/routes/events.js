@@ -7,12 +7,13 @@ import {
   getEvents,
   updateEvent,
 } from "../controllers/events.js";
+import { ensureAuth } from "../middleware/auth.js";
 
 router
-  .post("/", createEvent)
+  .post("/", ensureAuth, createEvent)
   .get("/", getEvents)
   .get("/:id", getEvent)
-  .put("/:id", updateEvent)
-  .delete("/:id", deleteEvent);
+  .put("/:id", ensureAuth, updateEvent)
+  .delete("/:id", ensureAuth, deleteEvent);
 
 export default router;
