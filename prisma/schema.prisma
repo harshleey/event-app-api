@@ -12,10 +12,10 @@ datasource db {
 
 model User {
   id              String @id @default(auto()) @map("_id") @db.ObjectId
-  name            String
-  email           String
+  username        String
+  email           String @unique
   avatar          String
-  passwordHash    String
+  password        String
   createAt        DateTime @default(now())
   updatedAt       DateTime @updatedAt
   events          Events[]
