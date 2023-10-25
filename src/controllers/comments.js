@@ -27,11 +27,16 @@ export const writeComment = async (req, res) => {
             message: "you comment on " + isEvent.tittle,
             comment,
           });
+        }).catch((err) => {
+          res.status(statusCode.BAD_REQUEST).json({
+            message: "you cn not delete comment " + err.message,
+          });
         });
-    }
-    return res.status(statusCode.NOT_FOUND).json({
+    } else {
+      return res.status(statusCode.NOT_FOUND).json({
       message: "not event found" + err.message,
     });
+    }
   } catch (err) {
     return res.status(statusCode.INTERNAL_SERVER_ERROR).json({
       message: err.message,
