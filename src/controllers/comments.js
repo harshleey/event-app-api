@@ -58,10 +58,10 @@ export const deleteComment = async (req, res) => {
       });
     }
     await database.comments
-      .findFirst({
+      .delete({
         where: {
           eventId,
-          commentId,
+          id: commentId
         },
       })
       .then(() => {
@@ -71,7 +71,7 @@ export const deleteComment = async (req, res) => {
       })
       .catch((err) => {
         res.status(statusCode.BAD_REQUEST).json({
-          message: "you cn not delete comment " + err.message,
+          message: "you can not delete comment " + err.message,
         });
       });
   } catch (err) {
