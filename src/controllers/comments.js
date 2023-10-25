@@ -43,6 +43,7 @@ export const writeComment = async (req, res) => {
     });
   }
 };
+
 // delete comment on event
 export const deleteComment = async (req, res) => {
   try {
@@ -80,6 +81,7 @@ export const deleteComment = async (req, res) => {
     });
   }
 };
+
 // find all comment of event
 export const getComments = async (req, res) => {
   try {
@@ -124,6 +126,7 @@ export const getComments = async (req, res) => {
     });
   }
 };
+
 // like and unlike comment of event
 export const likeAndUnlike = async (req, res) => {
   try {
