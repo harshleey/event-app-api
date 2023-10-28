@@ -1,6 +1,11 @@
 import { StatusCodes } from "http-status-codes";
 import { database } from "../libs/prisma.js";
 import { asyncWrapper } from "../middleware/asyncWrapper.js";
+import {
+  addUserToEvent,
+  findUser,
+  removeUserFromEvent,
+} from "../repository/events.js";
 
 // Create an event
 const createEvent = asyncWrapper(async (req, res) => {
@@ -38,15 +43,15 @@ const getEvents = asyncWrapper(async (req, res) => {
 });
 
 const getEvent = asyncWrapper(async (req, res) => {
-  const { id } = req.params;
+  const { eventId } = req.params;
   const event = await database.events.findUnique({
-    where: { id },
+    where: { id: eventId },
   });
   res.status(StatusCodes.OK).json({ event, errors: null });
 });
 
 const updateEvent = asyncWrapper(async (req, res) => {
-  const { id } = req.params;
+  const { eventId } = req.params;
   const {
     title,
     description,
@@ -68,22 +73,18 @@ const updateEvent = asyncWrapper(async (req, res) => {
       end_date,
       end_time,
     },
-    where: { id, userId },
+    where: { id: eventId, userId },
   });
   res.status(StatusCodes.OK).json({ event, errors: null });
 });
 
 const deleteEvent = asyncWrapper(async (req, res) => {
   const { id: userId } = req.user;
-  const { id } = req.params;
-
-  // const event = await database.events.findUnique({
-  //   where: { id },
-  // });
+  const { eventId } = req.params;
 
   // Delete from database
   const delEvent = await database.events
-    .delete({ where: { id, userId } })
+    .delete({ where: { id: eventId, userId } })
     .catch((error) => error.meta);
   res.status(StatusCodes.OK).json({
     event: delEvent ? delEvent : null,
@@ -91,4 +92,42 @@ const deleteEvent = asyncWrapper(async (req, res) => {
   });
 });
 
-export { createEvent, getEvents, getEvent, updateEvent, deleteEvent };
+const addUserIntInEvent = asyncWrapper(async (req, res) => {
+  const { eventId, userId } = req.params;
+  // Query the database if userId and eventId exists
+  const isMember = await findUser(userId, eventId);
+
+  if (isMember) {
+    return res
+      .status(400)
+      .json({ message: "This user is already interested in the event" });
+  }
+
+  await addUserToEvent(userId, eventId);
+  return res
+    .status(StatusCodes.CREATED)
+    .json({ message: "User added to event" });
+});
+
+const removeUserUnIntInEvent = asyncWrapper(async (req, res) => {
+  const { userId, eventId } = req.params;
+  const isAMember = await findUser(userId, eventId);
+  if (!isAMember) {
+    return res.status(400).json({ message: "User not found in event group" });
+  }
+
+  // Remove user from the group
+  await removeUserFromEvent(userId, eventId);
+  return res
+    .status(StatusCodes.OK)
+    .json({ message: "User removed from event" });
+});
+export {
+  createEvent,
+  getEvents,
+  getEvent,
+  updateEvent,
+  deleteEvent,
+  addUserIntInEvent,
+  removeUserUnIntInEvent,
+};
