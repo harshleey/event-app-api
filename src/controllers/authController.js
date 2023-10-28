@@ -67,12 +67,10 @@ export const postLogin = (req, res, next) => {
         return next(err);
       }
       req.flash("success", { msg: "Success! You are logged in." });
-      return res
-        .status(200)
-        .json({
-          message:
-            "Authentication successful, you are looged in as " + user.username,
-        });
+      return res.status(200).json({
+        message:
+          "Authentication successful, you are looged in as " + user.username,
+      });
       // You can customize the response message and status code as needed
     });
   })(req, res, next);
