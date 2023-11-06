@@ -17,6 +17,13 @@ const findUser = async (userId, eventId) => {
   return isMember ? true : false;
 };
 
+const findEvent = async (eventId) => {
+  const event = await database.events.findUnique({
+    where: { id: eventId },
+  });
+  return event;
+};
+
 const removeUserFromEvent = async (userId, eventId) => {
   const member = await database.IntEvent.deleteMany({
     where: { userId, eventId },
@@ -24,4 +31,4 @@ const removeUserFromEvent = async (userId, eventId) => {
   return member;
 };
 
-export { addUserToEvent, findUser, removeUserFromEvent };
+export { addUserToEvent, findUser, removeUserFromEvent, findEvent };

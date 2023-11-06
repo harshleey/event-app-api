@@ -3,6 +3,7 @@ import { database } from "../libs/prisma.js";
 import { asyncWrapper } from "../middleware/asyncWrapper.js";
 import {
   addUserToEvent,
+  findEvent,
   findUser,
   removeUserFromEvent,
 } from "../repository/events.js";
@@ -44,9 +45,7 @@ const getEvents = asyncWrapper(async (req, res) => {
 
 const getEvent = asyncWrapper(async (req, res) => {
   const { eventId } = req.params;
-  const event = await database.events.findUnique({
-    where: { id: eventId },
-  });
+  const event = await findEvent(eventId);
   res.status(StatusCodes.OK).json({ event, errors: null });
 });
 

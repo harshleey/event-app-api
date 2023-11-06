@@ -121,6 +121,18 @@ const removeUserGroup = asyncWrapper(async (req, res) => {
 const addEventToGroup = asyncWrapper(async (req, res) => {
   const { groupId, eventId } = req.params;
   const isEvent = await findEvent(groupId, eventId);
+  const isGroup = await readGroupById(groupId);
+  const event = await findEvent(eventId);
+  if (!isGroup || !event) {
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json(
+        !isGroup
+          ? { message: "Group with groupId not found" }
+          : { message: "Event with eventId not found" }
+      );
+  }
+
   if (isEvent) {
     return res
       .status(400)
